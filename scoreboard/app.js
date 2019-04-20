@@ -105,7 +105,7 @@ class Counter extends React.Component {
     );
   }
 }
-
+// rfer
 const App = (props) => {
   return (
     <div className="scoreboard">
