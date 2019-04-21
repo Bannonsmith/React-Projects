@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Header from './Header';
 import Player from './Player';
-
+import AddPlayerForm from "./AddPlayerForm";
 
 
 
@@ -9,27 +9,62 @@ class App extends Component {
   state = {
     players: [
       {
-        name: "Guil",
+        name: "Daenerys Targaryen",
         score: 0,
         id: 1
       },
       {
-        name: "Treasure",
+        name: "Jon Snow",
         score: 0,
         id: 2
       },
       {
-        name: "Ashley",
+        name: "Cersei Lannister",
         score: 0,
         id: 3
       },
       {
-        name: "James",
+        name: "The Night King",
         score: 0,
         id: 4
       }
     ]
   };
+
+  // Player id Counter
+  prevPlayerId = 4;
+
+  handleScoreChange = (index, delta) => {
+      this.setState( prevState => ({
+        score: prevState.players[index].score += delta
+      }));
+    }
+
+// Another way to update the players state using the concat() method
+//     handleAddPlayer = (name) => {
+//     let newPlayer = {
+//       name,
+//       score: 0,
+//       id: this.prevPlayerId += 1
+//     };
+//     this.setState( prevState => ({
+//       players: prevState.players.concat(newPlayer)
+//     }));
+//   }
+  handleAddPlayer = (name) => {
+    this.setState( prevState => {
+      return {
+        players: [
+          ...prevState.state.players,
+          {
+            name,
+            score: 0,
+            id: this.prevPlayerId += 1
+          }
+        ]
+      };
+    });
+  }
 
   handleRemovePlayer = (id) => {
     this.setState( prevState => {
@@ -44,19 +79,23 @@ class App extends Component {
       <div className="scoreboard">
         <Header
           title="Scoreboard"
-          totalPlayers={this.state.players.length}
+          players={this.state.players}
         />
 
         {/* Players list */}
-        {this.state.players.map( player =>
+        {this.state.players.map( (player, index) =>
           <Player
             name={player.name}
             score={player.score}
             id={player.id}
+            index={index}
             key={player.id.toString()}
+            changeScore={this.handleScoreChange}
             removePlayer={this.handleRemovePlayer}
           />
         )}
+
+        <AddPlayerForm addPlayer={this.handleAddPlayer} />
       </div>
     );
   }
